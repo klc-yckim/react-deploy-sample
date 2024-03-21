@@ -36,4 +36,5 @@ jobs:
           yarn build
 
       - name: deploy static site to s3 bucket
+        working-directory: ./react-deploy-sample
         run: aws s3 sync ./public/ s3://${{ env.BUCKET_NAME }} --delete
