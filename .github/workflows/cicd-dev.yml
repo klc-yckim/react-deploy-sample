@@ -1,0 +1,37 @@
+name: QA environment static web sever deploy
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - react-deploy-sample/**
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  BUCKET_NAME : ${{ secrets.QA_BUCKET_NAME }}
+  AWS_REGION : ap-northeast-2
+
+jobs:
+  cicd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: git clone the repository
+        uses: actions/checkout@v4
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install dependency
+        run: yarn
+
+      - name: build
+        run: yarn build
+
+      - name: deploy static site to s3 bucket
+        run: aws s3 sync ./public/ s3://${{ env.BUCKET_NAME }} --delete
