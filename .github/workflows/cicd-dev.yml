@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - develop
-    paths:
-      - react-deploy-sample/**
 
 permissions:
   id-token: write
@@ -26,6 +24,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.IAM_ROLE }}
 
       - name: Install dependency
         run: yarn
