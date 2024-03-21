@@ -15,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          test
+          워시앤페이 구글 회원 탈퇴 페이지 개발 예정
         </a>
       </header>
     </div>
