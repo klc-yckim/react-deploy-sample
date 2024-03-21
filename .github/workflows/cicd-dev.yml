@@ -26,6 +26,8 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           role-to-assume: ${{ secrets.IAM_ROLE }}
 
+      - name: move project
+        run : cd react-deploy-sample
       - name: Install dependency
         run: yarn
 
