@@ -1,0 +1,47 @@
+name: Production environment static web sever deploy
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  BUCKET_NAME : ${{ secrets.PROD_BUCKET_NAME }}
+  AWS_REGION : ap-northeast-2
+
+jobs:
+  cicd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: git clone the repository
+        uses: actions/checkout@v4
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.PROD_IAM_ROLE }}
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+            .yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: build
+        working-directory: ./react-deploy-sample
+        run: |
+          yarn install --frozen-lockfile
+          yarn build
+
+      - name: deploy static site to s3 bucket
+        working-directory: ./react-deploy-sample/build
+        run: aws s3 sync . s3://${{ env.BUCKET_NAME }} --delete
