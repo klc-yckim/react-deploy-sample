@@ -29,14 +29,10 @@ jobs:
       - name: move project
         run : cd react-deploy-sample
 
-      - name: Install dependency
-        run: |
-          ls
-          yarn
-
       - name: build
+        working-directory: ./react-deploy-sample
         run: |
-          ls
+          yarn
           yarn build
 
       - name: deploy static site to s3 bucket
