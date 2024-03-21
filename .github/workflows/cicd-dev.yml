@@ -30,7 +30,9 @@ jobs:
         run : cd react-deploy-sample
 
       - name: Install dependency
-        run: yarn
+        run: |
+          ls
+          yarn
 
       - name: build
         run: |
